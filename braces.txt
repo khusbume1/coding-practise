@@ -1,0 +1,55 @@
+package org.hackerrank;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
+
+public class Braces {
+	static String NO="NO";
+	static String YES="YES";
+	public static void main(String[] args) {
+		String []arrs = {"{}[]()","[{(]"};
+		System.out.println(braces(arrs)[0]);
+	}
+	public static String [] braces(String []values){
+		String NO="NO";
+		String YES="YES";
+		String []retVal = new String[values.length];
+		Stack<String> stack = new Stack<>();
+		String openBrac = "{,[,(";
+		//String closBrac = "},],)";
+		Map<String,String> map = new HashMap<>();
+		map.put("}", "{");
+		map.put("]", "[");
+		map.put(")", "(");
+		
+		for(int i =0;i<values.length;i++){
+			String val =values[i];
+			boolean valid = true;
+			if (val.length()%2==1){
+				retVal[i]= NO;
+				continue;
+			}
+			for(int j =0;j<val.length();j++){
+				if(openBrac.contains(val.charAt(j)+"")){
+					stack.add(val.charAt(j)+"");
+				}else{
+					String chars = stack.pop();
+					if(chars.equals(map.get(val.charAt(j)+""))){
+						continue; 
+					}else {
+						valid = false;
+						break;
+					}
+				}
+			}
+			if (!valid){
+				retVal[i]= NO;
+			} else{
+				retVal[i]= YES;
+			}
+		}
+		
+		return retVal;
+	}
+}

@@ -1,0 +1,32 @@
+package org.hackerrank;
+
+public class CustomSortArray {
+
+	public static void main( String []args){
+		int moves [] = {4,13,11,22,20};
+		System.out.println(moves(moves));
+	}
+	
+	static int moves(int []a){
+		int moveCount = 0 ;
+		int oddIndex = 0, evenIndex= a.length-1;
+		while(oddIndex<evenIndex){
+			if(a[oddIndex]%2==0){
+				oddIndex++;
+			}else{
+				if(a[evenIndex]%2==0){
+					int temp = a[evenIndex];
+					a[evenIndex]= a[oddIndex];
+					a[oddIndex]=temp;
+					oddIndex++;
+					evenIndex--;
+					moveCount++;
+				}else{
+					evenIndex--;
+				}
+			}
+		}
+		
+		return moveCount;	
+	}
+}
