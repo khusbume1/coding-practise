@@ -1,0 +1,76 @@
+import pandas as pd
+import numpy as np
+import math
+from pandas import DataFrame
+
+dframe = pd.read_csv( 'Historic_Secured_Property_Tax_Rolls.csv', index_col='Closed Roll Fiscal Year', parse_dates=True )
+
+# q2.1
+dframe2 = dframe['Property Class Code'].value_counts( )
+class_code = dframe2.max()
+total_data = len( dframe.index )
+result_fraction = class_code/total_data
+print (result_fraction)
+
+# q2.2
+dframe3 = dframe.drop_duplicates( subset='Block and Lot Number', keep='last' )
+dframe4 = dframe3['Closed Roll Assessed Improvement Value']
+dframe5 = dframe4.median( )
+print( dframe5 )
+
+# q2.3
+dframe6 = dframe.groupby( 'Neighborhood Code', as_index=False )['Closed Roll Assessed Improvement Value'].mean( )
+dframe7 = dframe6['Closed Roll Assessed Improvement Value']
+max_avg_value = dframe7.max()
+min_avg_value = dframe7.min()
+avg_difference = max_avg_value - min_avg_value
+print (avg_difference)
+
+# q2.4
+dframe20 = pd.read_csv( 'Historic_Secured_Property_Tax_Rolls.csv' )
+dframe21 = dframe20.groupby( 'Closed Roll Fiscal Year', as_index=False )['Closed Roll Assessed Land Value'].mean( )
+p1 = dframe21['Closed Roll Assessed Land Value'].max( )
+po = dframe21['Closed Roll Assessed Land Value'].min( )
+final_fiscal_year = dframe21['Closed Roll Fiscal Year'].max( )
+initial_fiscal_year = dframe21['Closed Roll Fiscal Year'].min( skipna=None, level=None, numeric_only=None )
+time_diff = final_fiscal_year - initial_fiscal_year + 1
+p_ratio = p1/po
+growth_rate_yearly = (math.log10(p_ratio)/time_diff)
+print ( growth_rate_yearly )
+
+# q2.6
+dframe8 = dframe.drop_duplicates( subset='Block and Lot Number', keep='first' )
+dframe8 = dframe8[pd.notnull(dframe8['Year Property Built'])]
+dframe10 = dframe8[(dframe8['Year Property Built'] < 1950)]
+dframe11 = dframe10['Number of Units'].mean()
+dframe12 = dframe8[(1950 <= dframe8['Year Property Built'])]
+dframe13 = dframe12['Number of Units'].mean()
+difference_in_avg = dframe13 - dframe11
+print(difference_in_avg)
+
+# q2.7
+dframe14 = dframe[(dframe['Number of Bedrooms'] != 0) & (dframe['Number of Units'] != 0)]
+dframe15 = dframe14.groupby( 'Zipcode of Parcel', as_index=False )['Number of Bedrooms'].mean( )
+dframe16 = dframe14.groupby( 'Zipcode of Parcel', as_index=False )['Number of Units'].mean( )
+mean_max_bedrooms = dframe15['Number of Bedrooms'].max()
+mean_max_units = dframe16['Number of Units'].max()
+final_ratio = (mean_max_bedrooms / mean_max_units)
+print (final_ratio)
+
+# q2.8
+dframe17 = dframe['Property Area in Square Feet']
+dframe18 = dframe['Lot Area']
+ratio_values = dframe17/dframe18
+dframe19 = ratio_values[(ratio_values != np.inf)]
+max_ratio = dframe19.max()
+print (max_ratio)
+
+
+Output:
+0.470725322714
+174869.0
+4832563.35662
+0.0207611829226
+0.01937204246180957
+1.38338658147
+23026.3157895
